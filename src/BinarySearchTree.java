@@ -7,25 +7,28 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     public void insert(T key) {
         if (root == null) {
-            root = new NodeType<T>(null, null);
-            root.setKey(key);
+            root = new NodeType<T>(key);
         } else {
             insertNode(root, key);
         } // if
     } // insert
 
     private void insertNode(NodeType<T> node, T key) {
-        if (key.compareTo(node.getKey()) < 0) {
+        int compareResult = key.compareTo(node.getInfo());
+
+        if (compareResult == 0) {
+            System.out.println("The item already exists in the tree.");
+            return;
+        } // if
+        if (compareResult < 0) {
             if (node.getLeftChild() == null) {
-                node.setLeftChild(new NodeType<T>(null, null));
-                node.getLeftChild().setKey(key);
+                node.setLeftChild(new NodeType<T>(key));
             } else {
                 insertNode(node.getLeftChild(), key);
             } // if
-        } else if (key.compareTo(node.getKey()) > 0) {
+        } else if (compareResult > 0) {
             if (node.getRightChild() == null) {
-                node.setRightChild(new NodeType<T>(null, null));
-                node.getRightChild().setKey(key);
+                node.setRightChild(new NodeType<T>(key));
             } else {
                 insertNode(node.getRightChild(), key);
             } // if
@@ -38,12 +41,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
     private NodeType<T> deleteNode(NodeType<T> node, T key) {
         if (node == null) {
+            System.out.println("The item is not present in the tree");
             return null;
         } // if
 
-        if (key.compareTo(node.getKey()) < 0) {
+        if (key.compareTo(node.getInfo()) < 0) {
             node.setLeftChild(deleteNode(node.getLeftChild(), key));
-        } else if (key.compareTo(node.getKey()) > 0) {
+        } else if (key.compareTo(node.getInfo()) > 0) {
             node.setRightChild(deleteNode(node.getRightChild(), key));
         } else {
             if (node.getLeftChild() == null && node.getRightChild() == null) {
@@ -54,8 +58,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
                 node = node.getLeftChild();
             } else {
                 NodeType<T> temp = findMin(node.getRightChild());
-                node.setKey(temp.getKey());
-                node.setRightChild(deleteNode(node.getRightChild(), temp.getKey()));
+                node.setInfo(temp.getInfo());
+                node.setRightChild(deleteNode(node.getRightChild(), temp.getInfo()));
             } // if
         } // if
 
@@ -78,7 +82,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
             return false;
         } // if
 
-        int compareResult = item.compareTo(node.getKey());
+        int compareResult = item.compareTo(node.getInfo());
         if (compareResult == 0) {
             return true;
         } else if (compareResult < 0) {
@@ -95,7 +99,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
     private void inOrderTraversal(NodeType<T> node) {
         if (node != null) {
             inOrderTraversal(node.getLeftChild());
-            System.out.print(node.getKey() + " ");
+            System.out.print(node.getInfo() + " ");
             inOrderTraversal(node.getRightChild());
         } // if
     } //inOrderTraversal
@@ -109,7 +113,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         if (node != null) {
             if ((node.getLeftChild() == null && node.getRightChild() != null) ||
             (node.getLeftChild() != null && node.getRightChild() == null)) {
-                System.out.print(node.getKey() + " ");
+                System.out.println("Single Parents: " + node.getInfo() + " ");
             } // if
             singleParentTraversal(node.getLeftChild());
             singleParentTraversal(node.getRightChild());
@@ -131,7 +135,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } // if
     } // countLeafNodes
 
-    public void getCousins(NodeType<T> node) {
+    public void getCousins(T value) {
+        NodeType<T> node = getNodeWithValue(root, value);
         if (node == null || node == root) {
             System.out.println("No cousins found.");
             return;
@@ -145,6 +150,25 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
         printCousins(root, node, level);
     } // getCousins
+
+    private NodeType<T> getNodeWithValue(NodeType<T> node, T value) {
+        if (node == null) {
+            return null;
+        } // if
+
+        if (node.getInfo().equals(value)) {
+            return node;
+        } // if
+
+        NodeType<T> leftNode = getNodeWithValue(node.getLeftChild(), value);
+        if (leftNode != null) {
+            return leftNode;
+        } // if
+
+        return getNodeWithValue(node.getRightChild(), value);
+    } // getNodeWithValue
+
+
 
     private int getNodeLevel(NodeType<T> node, NodeType<T> target, int level) {
         if (node == null) {
@@ -170,17 +194,16 @@ public class BinarySearchTree<T extends Comparable<T>> {
 
         if (level == 2) {
             if (node.getLeftChild() != null && node.getLeftChild() != target && node.getRightChild() != null && node.getRightChild() != target) {
-                System.out.print(node.getLeftChild().getKey() + " " + node.getRightChild().getKey() + " ");
+                System.out.print(node.getLeftChild().getInfo() + " " + node.getRightChild().getInfo() + " ");
             } else if (node.getLeftChild() != null && node.getLeftChild() != target) {
-                System.out.print(node.getLeftChild().getKey() + " ");
+                System.out.print(node.getLeftChild().getInfo() + " ");
             } else if (node.getRightChild() != null && node.getRightChild() != target) {
-                System.out.print(node.getRightChild().getKey() + " ");
+                System.out.print(node.getRightChild().getInfo() + " ");
             } // if
         } else if (level > 2) {
             printCousins(node.getLeftChild(), target, level-1);
             printCousins(node.getRightChild(), target, level-1);
         } // if
     } // printCousins
-
 
 } // BinarySearchTree

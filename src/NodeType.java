@@ -1,26 +1,35 @@
-public class NodeType{
+public class NodeType<T extends Comparable<T>> {
+    private T info;
+    private NodeType<T> leftChild;
+    private NodeType<T> rightChild;
 
-    private NodeType leftChild;
-    private NodeType rightChild;
+    public NodeType(T info) {
+        this.info = info;
+        leftChild = null;
+        rightChild = null;
+    }
 
-    public NodeType(NodeType leftChild, NodeType rightChild) {
-        this.leftChild = leftChild;
-        this.rightChild = rightChild;
-    } // NodeType
+    public T getInfo() {
+        return info;
+    }
 
-    public NodeType getLeftChild() {
+    public void setInfo(T info) {
+        this.info = info;
+    }
+
+    public NodeType<T> getLeftChild() {
         return leftChild;
-    } // getLeftChild
+    }
 
-    public void setLeftChild(NodeType leftChild) {
+    public void setLeftChild(NodeType<T> leftChild) {
         this.leftChild = leftChild;
-    } // setLeftChild
+    }
 
-    public NodeType getRightChild() {
+    public NodeType<T> getRightChild() {
         return rightChild;
-    } // getRightChild
+    }
 
-    public void setRightChild(NodeType rightChild) {
+    public void setRightChild(NodeType<T> rightChild) {
         this.rightChild = rightChild;
-    } // setRightChild
-} // NodeType
+    }
+}

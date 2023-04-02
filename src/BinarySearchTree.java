@@ -138,13 +138,11 @@ public class BinarySearchTree<T extends Comparable<T>> {
     public void getCousins(T value) {
         NodeType<T> node = getNodeWithValue(root, value);
         if (node == null || node == root) {
-            System.out.println("No cousins found.");
             return;
         } // if
 
         int level = getNodeLevel(root, node, 1);
         if (level == 1) {
-            System.out.println("No cousins found.");
             return;
         } // if
 
@@ -196,9 +194,9 @@ public class BinarySearchTree<T extends Comparable<T>> {
             if (node.getLeftChild() != null && node.getLeftChild() != target && node.getRightChild() != null && node.getRightChild() != target) {
                 System.out.print(node.getLeftChild().getInfo() + " " + node.getRightChild().getInfo() + " ");
             } else if (node.getLeftChild() != null && node.getLeftChild() != target) {
-                System.out.print(node.getLeftChild().getInfo() + " ");
+                printCousins(node.getLeftChild(), target, 1);
             } else if (node.getRightChild() != null && node.getRightChild() != target) {
-                System.out.print(node.getRightChild().getInfo() + " ");
+                printCousins(node.getRightChild(), target, 1);
             } // if
         } else if (level > 2) {
             printCousins(node.getLeftChild(), target, level-1);

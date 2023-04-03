@@ -5,6 +5,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         root = null;
     } //BinarySearchTree
 
+    //inserts value
     public void insert(T key) {
         if (root == null) {
             root = new NodeType<T>(key);
@@ -13,6 +14,7 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } // if
     } // insert
 
+    //uses value to insert node
     private void insertNode(NodeType<T> node, T key) {
         int compareResult = key.compareTo(node.getInfo());
 
@@ -35,10 +37,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } // if
     } // insertNode
 
+    // delete value
     public void delete(T key) {
         root = deleteNode(root, key);
     } //delete
 
+    // uses value to delete node
     private NodeType<T> deleteNode(NodeType<T> node, T key) {
         if (node == null) {
             System.out.println("The item is not present in the tree");
@@ -66,6 +70,8 @@ public class BinarySearchTree<T extends Comparable<T>> {
         return node;
     } //deleteNode
 
+
+    // finds the min value
     private NodeType<T> findMin(NodeType<T> node) {
         while (node.getLeftChild() != null) {
             node = node.getLeftChild();
@@ -73,10 +79,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
         return node;
     } //findMin
 
+    //searches for value
     public boolean search(T item) {
         return searchNode(root, item);
     } // search
 
+
+    //uses value to search for node
     private boolean searchNode(NodeType<T> node, T item) {
         if (node == null) {
             return false;
@@ -92,10 +101,12 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } // if
     } // searchNode
 
+    // gives list in order
     public void inOrder() {
         inOrderTraversal(root);
     } // inOrder
 
+    //travers and prints list
     private void inOrderTraversal(NodeType<T> node) {
         if (node != null) {
             inOrderTraversal(node.getLeftChild());
@@ -104,11 +115,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } // if
     } //inOrderTraversal
 
+    //gets single parent
     public void getSingleParent() {
         singleParentTraversal(root);
     } // getSingleParent
 
 
+    //traverses to find single parent
     private void singleParentTraversal(NodeType<T> node) {
         if (node != null) {
             if ((node.getLeftChild() == null && node.getRightChild() != null) ||
@@ -120,11 +133,13 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } // if
     } // singleParentTraversal
 
+    //get number of leaf nodes
     public int getNumLeafNodes() {
         return countLeafNodes(root);
     } // getNumLeafNodes
 
 
+    //recursivly counts leaf nodes
     private int countLeafNodes(NodeType<T> node) {
         if (node == null) {
             return 0;
@@ -135,73 +150,73 @@ public class BinarySearchTree<T extends Comparable<T>> {
         } // if
     } // countLeafNodes
 
+    //gets cousins
     public void getCousins(T value) {
-        NodeType<T> node = getNodeWithValue(root, value);
-        if (node == null || node == root) {
+        if (root == null || value == null) {
             return;
-        } // if
-
-        int level = getNodeLevel(root, node, 1);
-        if (level == 1) {
+        }
+        if (root.getInfo().equals(value)) {
             return;
-        } // if
+        }
+        int level = getLevel(root,value,1);
+        if (level == -1) {
+            return;
+        }
+        NodeType<T> parent = getParent(root, value);
+        if (parent == null) {
+            return;
+        }
+        System.out.println(value + " cousins: ");
+        printCousins(root, level, parent);
+    }
 
-        printCousins(root, node, level);
-    } // getCousins
-
-    private NodeType<T> getNodeWithValue(NodeType<T> node, T value) {
+    //finds the level of a node
+    private int getLevel(NodeType<T> node, T value, int level) {
         if (node == null) {
-            return null;
-        } // if
-
+            return -1;
+        }
         if (node.getInfo().equals(value)) {
-            return node;
-        } // if
-
-        NodeType<T> leftNode = getNodeWithValue(node.getLeftChild(), value);
-        if (leftNode != null) {
-            return leftNode;
-        } // if
-
-        return getNodeWithValue(node.getRightChild(), value);
-    } // getNodeWithValue
-
-
-
-    private int getNodeLevel(NodeType<T> node, NodeType<T> target, int level) {
-        if (node == null) {
-            return 0;
-        } // if
-
-        if (node == target) {
             return level;
-        } // if
+        }
+        int leftLevel = getLevel(node.getLeftChild(), value, level + 1);
+        if (leftLevel == -1) {
+            return getLevel(node.getRightChild(), value, level + 1);
+        }
+        return leftLevel;
+    }
 
-        int leftLevel = getNodeLevel(node.getLeftChild(), target, level+1);
-        if (leftLevel != 0) {
-            return leftLevel;
-        } // if
+    //finds a nodes parent
+    private NodeType<T> getParent(NodeType<T> node, T value) {
+    if (node == null || node.getInfo().equals(value)) {
+        return null;
+    }
+    if ((node.getLeftChild() != null && node.getLeftChild().getInfo().equals(value)) ||
+        (node.getRightChild() != null && node.getRightChild().getInfo().equals(value))) {
+        return node;
+    }
+    NodeType<T> leftParent = getParent(node.getLeftChild(), value);
+    if (leftParent != null) {
+        return leftParent;
+    }
+    return getParent(node.getRightChild(), value);
+}
 
-        return getNodeLevel(node.getRightChild(), target, level+1);
-    } // getNodeLevel
+    //prints the nodes cousins
+    private void printCousins(NodeType<T> node, int level, NodeType<T> parent) {
+    if (node == null || level <= 2) {
+        return;
+    }
 
-    private void printCousins(NodeType<T> node, NodeType<T> target, int level) {
-        if (node == null || level < 2) {
-            return;
-        } // if
+    if ( getParent(root, node.getInfo()) != null && getParent(root, node.getInfo()) != parent) {
+        if(getLevel(root, node.getInfo(),1) == level) {
+            System.out.print(node.getInfo() + " ");
+        }
+    }
 
-        if (level == 2) {
-            if (node.getLeftChild() != null && node.getLeftChild() != target && node.getRightChild() != null && node.getRightChild() != target) {
-                System.out.print(node.getLeftChild().getInfo() + " " + node.getRightChild().getInfo() + " ");
-            } else if (node.getLeftChild() != null && node.getLeftChild() != target) {
-                printCousins(node.getLeftChild(), target, 1);
-            } else if (node.getRightChild() != null && node.getRightChild() != target) {
-                printCousins(node.getRightChild(), target, 1);
-            } // if
-        } else if (level > 2) {
-            printCousins(node.getLeftChild(), target, level-1);
-            printCousins(node.getRightChild(), target, level-1);
-        } // if
-    } // printCousins
+    printCousins(node.getLeftChild(), level, parent);
+    printCousins(node.getRightChild(), level, parent);
+
+}
+
 
 } // BinarySearchTree

@@ -27,7 +27,7 @@ public class BinarySearchTreeDriver {
                 return;
             }
 
-            if (type.equals("i")) {
+            if (type.equals("i")) { // integer
                 tree = new BinarySearchTree<Integer>();
                 while (fileScanner.hasNextInt()) {
                     try {
@@ -38,7 +38,7 @@ public class BinarySearchTreeDriver {
                         return;
                     }
                 }
-            } else if (type.equals("d")) {
+            } else if (type.equals("d")) { // doubkle
                 tree = new BinarySearchTree<Double>();
                 while (fileScanner.hasNextDouble()) {
                     try {
@@ -49,7 +49,7 @@ public class BinarySearchTreeDriver {
                         return;
                     }
                 }
-            } else if (type.equals("s")) {
+            } else if (type.equals("s")) { // string
                 tree = new BinarySearchTree<String>();
                 while (fileScanner.hasNext()) {
                     String line = fileScanner.next();
@@ -62,7 +62,7 @@ public class BinarySearchTreeDriver {
             return;
         }
 
-
+        // prints cmds
         System.out.println("Commands:");
         System.out.println("(i) - Insert Item");
         System.out.println("(d) - Delete Item");
@@ -73,12 +73,14 @@ public class BinarySearchTreeDriver {
         System.out.println("(c) - Find Cousins");
         System.out.println("(q) - Quit program");
 
+        //checks for which cmd
         String command = "";
         while (!command.equals("q")) {
             System.out.print("Enter a command: ");
             command = inputScanner.nextLine();
             switch (command) {
             case "i":
+                //inserts value
                 System.out.print("In-order: ");
                 tree.inOrder();
                 System.out.println();
@@ -104,6 +106,7 @@ public class BinarySearchTreeDriver {
                 }
                 break;
             case "d":
+                //deletes value
                 System.out.print("In-order: ");
                 tree.inOrder();
                 System.out.println();
@@ -128,6 +131,7 @@ public class BinarySearchTreeDriver {
                 System.out.println();
                 break;
             case "s":
+                //searches for value
                 System.out.print("In-order: ");
                 tree.inOrder();
                 System.out.println();
@@ -151,9 +155,11 @@ public class BinarySearchTreeDriver {
                 System.out.println("Number of leaf nodes: " + tree.getNumLeafNodes());
                 break;
             case "sp":
+                //gets single parents
                 tree.getSingleParent();
                 break;
             case "c":
+                //gets cousins
                 System.out.print("In-order: ");
                 tree.inOrder();
                 System.out.println();
